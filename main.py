@@ -1,7 +1,9 @@
 import pygame
 
-WIDTH = 500
-HEIGHT = 500
+from grid import TileGrid
+
+WIDTH = 510
+HEIGHT = 510
 
 
 if __name__ == '__main__':
@@ -12,6 +14,8 @@ if __name__ == '__main__':
 
     pygame.display.set_caption("WFC")
 
+    grid = TileGrid()
+
     running = True
     while running:
         for event in pygame.event.get():
@@ -19,5 +23,7 @@ if __name__ == '__main__':
                 running = False
 
         screen.fill(color=(0, 0, 0))
+
+        grid.draw(screen)
 
         pygame.display.flip()
