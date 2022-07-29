@@ -1,4 +1,6 @@
-from tile import TileSprite
+from json import load
+
+from tile import Tile
 
 
 class TileGrid:
@@ -8,7 +10,7 @@ class TileGrid:
         for x in range(10):
             row = []
             for y in range(10):
-                tile = TileSprite()
+                tile = Tile()
                 tile.set_pos(51 * x, 51 * y)
                 row.append(tile)
             self.tiles.append(row)
@@ -20,3 +22,14 @@ class TileGrid:
                     continue
 
                 tile.draw(screen)
+
+    def __repr__(self):
+        representation = ""
+        for row in self.tiles:
+            str_row = ""
+            for tile in row:
+                str_row += f"{tile.entropy} "
+            str_row += "\n"
+            representation += str_row
+
+        return representation
