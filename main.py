@@ -15,6 +15,8 @@ if __name__ == '__main__':
     pygame.display.set_caption("WFC")
 
     grid = TileGrid()
+    grid.tiles[1][1].collapse(*[1, 2, 3, 4])
+    # grid.json_to_grid("json_data/grid_prototype.json")
 
     running = True
     while running:
@@ -27,3 +29,5 @@ if __name__ == '__main__':
         grid.draw(screen)
 
         pygame.display.flip()
+
+    print(grid)
