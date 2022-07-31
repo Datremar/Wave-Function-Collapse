@@ -1,5 +1,7 @@
 import pygame
 
+from tile_data import TILE_DATA
+
 
 class TileSprite:
     def __init__(self, image_path: str = ""):
@@ -27,24 +29,34 @@ class TileSprite:
 
 class Tile:
     def __init__(self):
+        self.type = "-1"
         self.sprite = TileSprite()
-        self.variants = [x for x in range(5)]
+        self.variants = list(range(5))
         self.entropy = len(self.variants)
 
         self.sprite.set_image("resources/images/uncertain.png")
 
+    @classmethod
+    def get_sprite_name(cls, tile_id):
+        return TILE_DATA['Tiles'][str(tile_id)]['sprite']
+
     def collapse(self, *variants_to_exclude):
         for exclusion in variants_to_exclude:
-            self.variants.remove(exclusion)
+            if exclusion in self.variants:
+                self.variants.remove(exclusion)
 
         self.entropy = len(self.variants)
 
+        if self.entropy == 0:
+            pass
         if self.entropy == 1:
-            self.sprite.set_image("resources/images/Tile1.png")
-        elif self.entropy > 0:
-            self.sprite.set_image("resources/images/uncertain.png")
+            self.type = self.variants[0]
+            self.sprite.set_image(f"resources/images/{Tile.get_sprite_name(self.type)}")
+
+            self.variants.clear()
+            self.entropy = 0
         else:
-            self.sprite.set_image("resources/images/TestTile.png")
+            self.sprite.set_image("resources/images/uncertain.png")
 
     def set_pos(self, x, y):
         self.sprite.set_pos(x, y)
