@@ -9,7 +9,7 @@ class TileSprite:
         self.y = 0
 
         if image_path == "":
-            self.image = pygame.image.load("resources/images/TestTile.png")
+            self.image = pygame.image.load("resources/images/test_images/TestTile.png")
         else:
             self.image = pygame.image.load(image_path)
 
@@ -29,34 +29,52 @@ class TileSprite:
 
 class Tile:
     def __init__(self):
-        self.type = "-1"
+        self.socket_type = "-1"
         self.sprite = TileSprite()
         self.variants = list(range(5))
         self.entropy = len(self.variants)
 
-        self.sprite.set_image("resources/images/uncertain.png")
+        self.sprite.set_image("resources/images/blurs/uncertain.png")
 
     @classmethod
     def get_sprite_name(cls, tile_id):
         return TILE_DATA['Tiles'][str(tile_id)]['sprite']
 
-    def collapse(self, *variants_to_exclude):
-        for exclusion in variants_to_exclude:
-            if exclusion in self.variants:
-                self.variants.remove(exclusion)
+    def partial_collapse(self, exclusions=None, inclusions=None):
+        if self.entropy == 0:
+            return
+
+        if exclusions and not inclusions:
+            for exclusion in exclusions:
+                if exclusion in self.variants:
+                    self.variants.remove(exclusion)
+        elif inclusions and not exclusions:
+            for variant in self.variants:
+                if variant not in inclusions:
+                    self.variants.remove(variant)
 
         self.entropy = len(self.variants)
 
         if self.entropy == 0:
             pass
-        if self.entropy == 1:
-            self.type = self.variants[0]
-            self.sprite.set_image(f"resources/images/{Tile.get_sprite_name(self.type)}")
+        elif self.entropy == 1:
+            self.socket_type = self.variants[0]
+            self.sprite.set_image(f"resources/images/sprites/{Tile.get_sprite_name(self.socket_type)}")
 
             self.variants.clear()
             self.entropy = 0
+        elif 1 < self.entropy < 5:
+            blur_id = "".join(map(str, self.variants))
+            self.sprite.set_image(f"resources/images/blurs/{blur_id}.png")
         else:
-            self.sprite.set_image("resources/images/uncertain.png")
+            self.sprite.set_image("resources/images/blurs/uncertain.png")
+
+    def collapse_to(self, tile_id):
+        self.entropy = 0
+        self.variants = []
+        self.socket_type = str(tile_id)
+
+        self.sprite.set_image(f"resources/images/sprites/{Tile.get_sprite_name(self.socket_type)}")
 
     def set_pos(self, x, y):
         self.sprite.set_pos(x, y)
