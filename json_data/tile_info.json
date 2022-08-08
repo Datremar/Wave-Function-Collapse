@@ -4,37 +4,76 @@
       "name": "Uncertain",
       "self_socket": -1,
       "sprite": "uncertain.png",
-      "allowed_sockets": [-1, 0, 1, 2, 3, 4]
+      "allowed_sockets": [-1, 0, 1, 2, 3, 4],
+      "disallowed_sockets": []
     },
     "0": {
       "name": "Grass",
+      "weight": 10,
       "self_socket": 0,
       "sprite": "Grass.png",
-      "allowed_sockets": [0, 2, 3]
+      "allowed_sockets": [0, 2, 3],
+      "disallowed_sockets": [1, 4]
     },
     "1": {
       "name": "Forest",
+      "weight": 10,
       "self_socket": 1,
       "sprite": "Forest.png",
-      "allowed_sockets": [1, 2]
+      "allowed_sockets": [1, 2],
+      "disallowed_sockets": [0, 3, 4]
     },
     "2": {
       "name": "PreForest",
+      "weight": 10,
       "self_socket": 2,
       "sprite": "PreForest.png",
-      "allowed_sockets": [0, 1, 2]
+      "allowed_sockets": [0, 1, 2],
+      "disallowed_sockets": [3, 4]
     },
     "3": {
       "name": "Sand",
+      "weight": 10,
       "self_socket": 3,
       "sprite": "Sand.png",
-      "allowed_sockets": [0, 3, 4]
+      "allowed_sockets": [0, 3, 4],
+      "disallowed_sockets": [1, 2]
     },
     "4": {
       "name": "Water",
+      "weight": 15,
       "self_socket": 4,
       "sprite": "Water.png",
-      "allowed_sockets": [3, 4]
+      "allowed_sockets": [3, 4],
+      "disallowed_sockets": [0, 1, 2]
+    },
+    "012": {
+      "name": "012",
+      "self_socket": -1,
+      "sprite": "012.png",
+      "allowed_sockets": [0, 1, 2, 3],
+      "disallowed_sockets": [4]
+    },
+    "023": {
+      "name": "023",
+      "self_socket": -1,
+      "sprite": "023.png",
+      "allowed_sockets": [0, 1, 2, 3, 4],
+      "disallowed_sockets": []
+    },
+    "34": {
+      "name": "34",
+      "self_socket": -1,
+      "sprite": "34.png",
+      "allowed_sockets": [0, 3, 4],
+      "disallowed_sockets": [1, 2]
+    },
+    "034": {
+      "name": "034",
+      "self_socket": -1,
+      "sprite": "034.png",
+      "allowed_sockets": [0, 2, 3, 4],
+      "disallowed_sockets": [1]
     }
   }
 }
