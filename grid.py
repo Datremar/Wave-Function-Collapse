@@ -1,15 +1,15 @@
-from json import load
-
 from tile import Tile
 
 
 class TileGrid:
-    def __init__(self):
+    def __init__(self, width, height):
         self.tiles = []
+        self.height = width
+        self.width = height
 
-        for x in range(10):
+        for x in range(self.height):
             row = []
-            for y in range(10):
+            for y in range(self.width):
                 tile = Tile()
                 tile.set_pos(51 * x, 51 * y)
                 row.append(tile)
