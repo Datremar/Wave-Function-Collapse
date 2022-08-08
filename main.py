@@ -1,10 +1,13 @@
+from random import randint
+
 import pygame
 
 from grid import TileGrid
+from collapse_algorithm import collapse_tile, search_least_entropy
 
 
-WIDTH = 510
-HEIGHT = 510
+WIDTH = 1920
+HEIGHT = 1080
 
 
 if __name__ == '__main__':
@@ -14,8 +17,11 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
 
     pygame.display.set_caption("WFC")
+    x, y = 38, 22
+    grid = TileGrid(x, y)
+    collapse_tile(randint(0, x - 1), randint(0, y - 1), grid)
 
-    grid = TileGrid()
+    start = pygame.time.get_ticks()
 
     running = True
     while running:
@@ -26,6 +32,16 @@ if __name__ == '__main__':
         screen.fill(color=(0, 0, 0))
 
         grid.draw(screen)
+
+        end = pygame.time.get_ticks()
+
+        if end - start > 0:
+            x, y = search_least_entropy(grid)
+            if x == None and y == None:
+                pass
+            else:
+                collapse_tile(x, y, grid)
+            start = pygame.time.get_ticks()
 
         pygame.display.flip()
 
