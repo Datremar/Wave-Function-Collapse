@@ -1,3 +1,5 @@
+from random import choice
+
 import pygame
 
 from tile_data import TILE_DATA
@@ -29,6 +31,8 @@ class TileSprite:
 
 class Tile:
     def __init__(self):
+        self.contradicted = False
+        self.collapsed = False
         self.socket_type = "-1"
         self.sprite = TileSprite()
         self.variants = list(range(5))
@@ -38,43 +42,73 @@ class Tile:
 
     @classmethod
     def get_sprite_name(cls, tile_id):
-        return TILE_DATA['Tiles'][str(tile_id)]['sprite']
+        return TILE_DATA[str(tile_id)]['sprite']
 
-    def partial_collapse(self, exclusions=None, inclusions=None):
-        if self.entropy == 0:
+    def set_contradicted(self):
+        self.sprite.set_image("resources/images/test_images/contradicted.png")
+        self.collapsed = True
+        self.contradicted = True
+        print("CONTRADICTION OCCURED")
+
+    def set_blur(self):
+        blur_id = "".join(map(str, self.variants))
+        if blur_id == "01234":
+            blur_id = "uncertain"
+
+        if blur_id != "":
+            self.sprite.set_image(f"resources/images/blurs/{blur_id}.png")
+        else:
+            self.set_contradicted()
+
+    def reduce_entropy(self, allowed_variants):
+        if self.collapsed:
             return
 
-        if exclusions and not inclusions:
-            for exclusion in exclusions:
-                if exclusion in self.variants:
-                    self.variants.remove(exclusion)
-        elif inclusions and not exclusions:
-            for variant in self.variants:
-                if variant not in inclusions:
-                    self.variants.remove(variant)
+        variants_to_remove = []
+
+        for variant in self.variants:
+            if variant not in allowed_variants:
+                variants_to_remove.append(variant)
+
+        for variant in variants_to_remove:
+            self.variants.remove(variant)
 
         self.entropy = len(self.variants)
 
         if self.entropy == 0:
-            pass
-        elif self.entropy == 1:
-            self.socket_type = self.variants[0]
-            self.sprite.set_image(f"resources/images/sprites/{Tile.get_sprite_name(self.socket_type)}")
+            self.set_contradicted()
+            return
 
-            self.variants.clear()
-            self.entropy = 0
-        elif 1 < self.entropy < 5:
-            blur_id = "".join(map(str, self.variants))
-            self.sprite.set_image(f"resources/images/blurs/{blur_id}.png")
+        if self.entropy == 1:
+            self.collapse_to(self.variants[0])
         else:
-            self.sprite.set_image("resources/images/blurs/uncertain.png")
+            self.set_blur()
 
     def collapse_to(self, tile_id):
         self.entropy = 0
         self.variants = []
+        self.collapsed = True
         self.socket_type = str(tile_id)
 
         self.sprite.set_image(f"resources/images/sprites/{Tile.get_sprite_name(self.socket_type)}")
+
+    def collapse(self):
+        collapse_choice = choice(self.variants)
+        self.collapse_to(collapse_choice)
+
+    def entangle(self, variants: list):
+        self.collapsed = False
+        self.contradicted = False
+        self.variants = variants
+        self.entropy = len(self.variants)
+
+        self.set_blur()
+
+    def is_collapsed(self):
+        return self.collapsed
+
+    def is_contradicted(self):
+        return self.contradicted
 
     def set_pos(self, x, y):
         self.sprite.set_pos(x, y)

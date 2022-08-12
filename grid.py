@@ -4,16 +4,23 @@ from tile import Tile
 class TileGrid:
     def __init__(self, width, height):
         self.tiles = []
-        self.height = width
-        self.width = height
+        self.width = width
+        self.height = height
+        self.uncollapsed_tiles = self.width * self.height
 
-        for x in range(self.height):
+        for x in range(self.width):
             row = []
-            for y in range(self.width):
+            for y in range(self.height):
                 tile = Tile()
                 tile.set_pos(51 * x, 51 * y)
                 row.append(tile)
             self.tiles.append(row)
+
+    def is_collapsed(self):
+        return self.uncollapsed_tiles == 0
+
+    def collapse(self):
+        self.uncollapsed_tiles -= 1
 
     def draw(self, screen):
         for row in self.tiles:
